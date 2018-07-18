@@ -12,8 +12,9 @@ function JSFunCompletor() {
 }
 
 // Evaluate the text in argument according to current rules
-
-JSFunCompletor.prototype.Eval = function(txt) {
+// The argument 'params' allows the user to pass data to the 
+// rules' functions 
+JSFunCompletor.prototype.Eval = function(txt, params) {
   try {
     var res = txt;
     // First process the IF_ keywords
@@ -21,7 +22,7 @@ JSFunCompletor.prototype.Eval = function(txt) {
       // If this keyword is a condition
       if (keyword.indexOf("((IF_") == 0) {
         // Evaluate the condition
-        var evalCond = this._rules[keyword]();
+        var evalCond = this._rules[keyword](params);
         // If the condition is not verified
         if (evalCond == false) {
           // Variable to memorize the start of the condition block
@@ -55,7 +56,7 @@ JSFunCompletor.prototype.Eval = function(txt) {
         // Apply replacement only if the keyword is present to avoid 
         // infinite loop if some rules uses the Eval method
         if (res.indexOf(keyword) != -1) {
-          var replacement = this._rules[keyword]();
+          var replacement = this._rules[keyword](params);
           res = res.split(keyword).join(replacement);
         }
       }
